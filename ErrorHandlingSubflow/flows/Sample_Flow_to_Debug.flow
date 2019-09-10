@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <assignments>
+        <description>Create an Assignment element like this one for each element of your Flow that you can. Change the {!ErrorLocation} value (on the right) to be the name of that element. In this example, this Assignment will be connected to the &quot;Sample Account&quot; element with a Fault line.</description>
+        <name>ErrorLocationAssignment</name>
+        <label>ErrorLocationAssignment</label>
+        <locationX>225</locationX>
+        <locationY>292</locationY>
+        <assignmentItems>
+            <assignToReference>ErrorLocation</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Sample Account</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>ErrorHandlingSubFlow</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Create an Assignment element like this one for each element of your Flow that you can. Change the {!ErrorLocation} value (on the right) to be the name of that element. In this example, this Assignment will be connected to the &quot;Sample Contact&quot; element with a Fault line.</description>
+        <name>ErrorLocationAssignment_1</name>
+        <label>ErrorLocationAssignment1</label>
+        <locationX>389</locationX>
+        <locationY>293</locationY>
+        <assignmentItems>
+            <assignToReference>ErrorLocation</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Sample Contact</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>ErrorHandlingSubFlow</targetReference>
+        </connector>
+    </assignments>
+    <description>This Flow demonstrates how to connect a flow to the Error Handling Subflow with assignment Elements.</description>
+    <formulas>
+        <name>CurrentUserEmail</name>
+        <dataType>String</dataType>
+        <expression>{!$User.Email}</expression>
+    </formulas>
+    <formulas>
+        <description>Formula to find the name of the Current User. This is used in the email that alerts the administrator about the Flow error.</description>
+        <name>CurrentUserName</name>
+        <dataType>String</dataType>
+        <expression>{!$User.FirstName}&amp;&quot; &quot;&amp; {!$User.LastName}</expression>
+    </formulas>
+    <interviewLabel>Sample Flow to Debug {!$Flow.CurrentDateTime}</interviewLabel>
+    <isTemplate>true</isTemplate>
+    <label>Sample Flow to Debug</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>This element is only serving as an example and should be deleted from your actual flow.</description>
+        <name>Sample_Create_Account</name>
+        <label>Sample Account</label>
+        <locationX>223</locationX>
+        <locationY>50</locationY>
+        <assignRecordIdToReference>SampleVariable1</assignRecordIdToReference>
+        <connector>
+            <targetReference>Sample_Create_Contact</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorLocationAssignment</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>Sample Account Name</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordCreates>
+    <recordCreates>
+        <description>This element is only serving as an example and should be deleted from your actual flow.</description>
+        <name>Sample_Create_Contact</name>
+        <label>Sample Contact</label>
+        <locationX>388</locationX>
+        <locationY>50</locationY>
+        <assignRecordIdToReference>SampleVariable2</assignRecordIdToReference>
+        <faultConnector>
+            <targetReference>ErrorLocationAssignment_1</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>LastName</field>
+        </inputAssignments>
+        <object>Contact</object>
+    </recordCreates>
+    <startElementReference>Sample_Create_Account</startElementReference>
+    <status>Active</status>
+    <subflows>
+        <description>Send values to the subflow to send an email with details to the admin and alert the current user that an admin has been notified of the error.</description>
+        <name>ErrorHandlingSubFlow</name>
+        <label>ErrorHandlingSubFlow</label>
+        <locationX>306</locationX>
+        <locationY>466</locationY>
+        <flowName>Debug_Flow_Error_Handling</flowName>
+        <inputAssignments>
+            <name>CurrentUserEmail</name>
+            <value>
+                <elementReference>CurrentUserEmail</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>CurrentUserName</name>
+            <value>
+                <elementReference>CurrentUserName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>ErrorLocation</name>
+            <value>
+                <elementReference>ErrorLocation</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowFaultMessage</name>
+            <value>
+                <elementReference>flowFaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowName</name>
+            <value>
+                <stringValue>Sample Flow to Debug</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>allTheVariables</name>
+            <value>
+                <elementReference>AllVariables</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <textTemplates>
+        <description>Update this list with all of the variables in your flow to record the values of the variables at the time of the error. This is just an example for this flow. You would want to replace these example variables with your own. Type out the name of the variable and insert the variable as a resource.</description>
+        <name>AllVariables</name>
+        <text>Sample Account ID: {!SampleVariable1}
+Sample Contact ID: {!SampleVariable2}</text>
+    </textTemplates>
+    <variables>
+        <name>ErrorLocation</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <description>Send the error message from this Flow to the subflow to include in the email to the admin.</description>
+        <name>flowFaultMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <elementReference>$Flow.FaultMessage</elementReference>
+        </value>
+    </variables>
+    <variables>
+        <name>SampleRecordVar</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Account</objectType>
+    </variables>
+    <variables>
+        <description>This is an example of a variable. It is not necessary to include this variable in your actual flow.</description>
+        <name>SampleVariable1</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>This is an example of a variable. It is not necessary to include this variable in your actual flow.</description>
+        <name>SampleVariable2</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

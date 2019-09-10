@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Alert current user that the administrator has been alerted of the error and will get back to them.</description>
+        <name>Send_email_0</name>
+        <label>Send Email to Current User</label>
+        <locationX>558</locationX>
+        <locationY>50</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailBodyCurrentUser</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>CurrentUserEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Error in Salesforce, Admin Alerted</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Alert the administrator about the error in the Flow.</description>
+        <name>SendEmailtoAdmin</name>
+        <label>Send Email to Admin</label>
+        <locationX>394</locationX>
+        <locationY>50</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Send_email_0</targetReference>
+        </connector>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailBodyAdmin</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>AdminEmailAddresses</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Error in Flow: {!FlowName}</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <interviewLabel>Debug Flow Error Handling {!$Flow.CurrentDateTime}</interviewLabel>
+    <isTemplate>true</isTemplate>
+    <label>Debug Flow Error Handling</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Set the value of who should receive the Admin error emails in the custom metadata type record &quot;Error Email Recipient.&quot; Create a comma separated list of recipients.</description>
+        <name>Lookup_Admin_Email</name>
+        <label>Lookup Admin Email</label>
+        <locationX>221</locationX>
+        <locationY>50</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>SendEmailtoAdmin</targetReference>
+        </connector>
+        <object>Flow_Error_Email__mdt</object>
+        <outputAssignments>
+            <assignToReference>AdminEmailAddresses</assignToReference>
+            <field>Comma_Separated_Email_List__c</field>
+        </outputAssignments>
+    </recordLookups>
+    <startElementReference>Lookup_Admin_Email</startElementReference>
+    <status>Active</status>
+    <textTemplates>
+        <description>Body of the email sent to the administrator when there is an error.</description>
+        <name>EmailBodyAdmin</name>
+        <text>Flow Error Message: {!FlowFaultMessage}
+Error occurred in Flow named &quot;{!FlowName}&quot; at element &quot;{!ErrorLocation}&quot;
+Current running user: {!CurrentUserName}, {!CurrentUserEmail}
+All of the variables from the Flow:
+{!allTheVariables}</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Text of the Email sent to the current user. Edit it as much as you like.</description>
+        <name>EmailBodyCurrentUser</name>
+        <text>While you were using Salesforce, an error occurred in a Flow called {!FlowName}. Your Salesforce administrator has been made aware of the issue.</text>
+    </textTemplates>
+    <variables>
+        <description>Looked up from Custom Metadata Type &quot;Error Email Recipient&quot;</description>
+        <name>AdminEmailAddresses</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>The list of all of the variables from the Flow that has an error.</description>
+        <name>allTheVariables</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>CurrentUserEmail</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Name of user currently running the Flow, sent from the Flow that ran into an error.</description>
+        <name>CurrentUserName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ErrorLocation</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Fault message sent from the flow that had a Fault</description>
+        <name>FlowFaultMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>FlowName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

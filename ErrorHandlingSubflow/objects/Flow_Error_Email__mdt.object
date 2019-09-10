@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Set this custom metadata type for the email addresses that should receive the error message from flow Debug Flow Error Handling (unmanaged package).</description>
+    <fields>
+        <fullName>Comma_Separated_Email_List__c</fullName>
+        <description>List of email addresses of recipients for emails from Debug Flow Error Handling</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>List email addresses separated by commas.</inlineHelpText>
+        <label>Comma Separated Email List</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <label>Error Email Recipients</label>
+    <pluralLabel>Error Email Recipients</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

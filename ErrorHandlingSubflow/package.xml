@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ErrorHandlingSubflow</fullName>
+    <types>
+        <members>Flow_Error_Email__mdt.Comma_Separated_Email_List__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Flow_Error_Email__mdt</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Debug_Flow_Error_Handling</members>
+        <members>Sample_Flow_to_Debug</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Flow_Error_Email__mdt-Error Email Recipient Layout</members>
+        <name>Layout</name>
+    </types>
+    <version>46.0</version>
+</Package>
